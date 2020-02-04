@@ -5,13 +5,14 @@
 	"FriendlyName": "GitlabIntegration",
 	"Description": "",
 	"Category": "Other",
-	"CreatedBy": "FreezerNick",
-	"CreatedByURL": "",
+	"CreatedBy": "Free2Play-Entertainment",
+	"CreatedByURL": "https://f2p-entertainment.de",
 	"DocsURL": "",
 	"MarketplaceURL": "",
-	"SupportURL": "",
+	"SupportURL": "mailto:incoming+f2p-entertainment-plugins-ue4-gitlab-5318276-issue-@incoming.gitlab.com",
 	"CanContainContent": false,
 	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
