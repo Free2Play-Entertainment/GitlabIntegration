@@ -8,6 +8,10 @@
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Text/STextBlock.h"
 #include "Framework/MultiBox/MultiBoxBuilder.h"
+#include "GitlabIntegrationSettings.h"
+#include "ISettingsModule.h"
+#include "ISettingsSection.h"
+#include "ISettingsContainer.h"
 
 static const FName GitlabIntegrationTabName("GitlabIntegration");
 
@@ -48,6 +52,8 @@ void FGitlabIntegrationModule::StartupModule()
 	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(GitlabIntegrationTabName, FOnSpawnTab::CreateRaw(this, &FGitlabIntegrationModule::OnSpawnPluginTab))
 		.SetDisplayName(LOCTEXT("FGitlabIntegrationTabTitle", "GitlabIntegration"))
 		.SetMenuType(ETabSpawnerMenuType::Hidden);
+
+	RegisterSettings();
 }
 
 void FGitlabIntegrationModule::ShutdownModule()
@@ -59,6 +65,8 @@ void FGitlabIntegrationModule::ShutdownModule()
 	FGitlabIntegrationCommands::Unregister();
 
 	FGlobalTabmanager::Get()->UnregisterNomadTabSpawner(GitlabIntegrationTabName);
+
+	UnregisterSettings();
 }
 
 TSharedRef<SDockTab> FGitlabIntegrationModule::OnSpawnPluginTab(const FSpawnTabArgs& SpawnTabArgs)
@@ -96,6 +104,39 @@ void FGitlabIntegrationModule::AddMenuExtension(FMenuBuilder& Builder)
 void FGitlabIntegrationModule::AddToolbarExtension(FToolBarBuilder& Builder)
 {
 	Builder.AddToolBarButton(FGitlabIntegrationCommands::Get().OpenPluginWindow);
+}
+
+bool FGitlabIntegrationModule::HandleSettingsSaved()
+{
+	UGitlabIntegrationSettings* Settings = GetMutableDefault<UGitlabIntegrationSettings>();
+	Settings->SaveConfig();
+	return true;
+}
+
+void FGitlabIntegrationModule::RegisterSettings()
+{
+	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings"))
+	{
+		// Register the settings
+		ISettingsSectionPtr SettingsSection = SettingsModule->RegisterSettings("Project", "Plugins", "GitLabIntegration",
+			LOCTEXT("RuntimeGeneralSettingsName", "GitLab Integration"),
+			LOCTEXT("RuntimeGeneralSettingsDescription", "Config for the Gitlab Integration Plugin"),
+			GetMutableDefault<UGitlabIntegrationSettings>()
+			);
+
+		if (SettingsSection.IsValid())
+		{
+			SettingsSection->OnModified().BindRaw(this, &FGitlabIntegrationModule::HandleSettingsSaved);
+		}
+	}
+}
+
+void FGitlabIntegrationModule::UnregisterSettings()
+{
+	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings"))
+	{
+		SettingsModule->UnregisterSettings("Project", "CustomSettings", "General");
+	}
 }
 
 #undef LOCTEXT_NAMESPACE
