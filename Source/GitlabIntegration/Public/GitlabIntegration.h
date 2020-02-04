@@ -28,4 +28,8 @@ private:
 
 private:
 	TSharedPtr<class FUICommandList> PluginCommands;
+
+	bool HandleSettingsSaved();
+	void RegisterSettings();
+	void UnregisterSettings();
 };
