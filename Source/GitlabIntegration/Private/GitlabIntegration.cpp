@@ -135,7 +135,7 @@ void FGitlabIntegrationModule::UnregisterSettings()
 {
 	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings"))
 	{
-		SettingsModule->UnregisterSettings("Project", "CustomSettings", "General");
+		SettingsModule->UnregisterSettings("Project", "Plugins", "GitLabIntegration");
 	}
 }
 
