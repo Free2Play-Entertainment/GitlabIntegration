@@ -11,7 +11,6 @@
 #include "GitlabIntegrationSettings.h"
 #include "ISettingsModule.h"
 #include "ISettingsSection.h"
-#include "ISettingsContainer.h"
 
 static const FName GitlabIntegrationTabName("GitlabIntegration");
 
